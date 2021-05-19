@@ -1,11 +1,12 @@
-defmodule HsocketWeb.AuthSocket do
+defmodule HsocketsWeb.AuthSocket do
+
   use Phoenix.Socket
+
+
+  channel"ping", HsocketsWeb.PingChannel
+  channel"tracked", HsocketsWeb.TrackedChannel
+
   require Logger
-
-  channel "ping*", HsocketsWeb.PingChannel
-  channel "tracked", HsocketsWeb.TrackedChannel
-
-  @one_day 86400
 
   def connect(%{"token" => token}, socket) do
     case verify(socket, token) do
@@ -29,8 +30,11 @@ defmodule HsocketWeb.AuthSocket do
       socket,
       "saltidentifier",
       token,
-      max_age: @one_day
+      max_age: 86400
     )
   end
 
 end
+
+# rita  -> 727981218
+# compu -> 825311337
