@@ -2,7 +2,6 @@ defmodule HsocketsWeb.AuthSocket do
 
   use Phoenix.Socket
 
-
   channel"ping", HsocketsWeb.PingChannel
   channel"tracked", HsocketsWeb.TrackedChannel
 
