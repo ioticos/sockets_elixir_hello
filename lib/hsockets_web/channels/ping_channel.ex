@@ -3,11 +3,6 @@ defmodule HsocketsWeb.PingChannel do
   intercept ["request_ping"]
 
 
-  # PARA LOGUEARSE A DIFERENTES TOPICOS
-  # NOTESE PUEDO PASAR INFO EN EL CUERPO DEL TOPICO SEPARADO POR :
-  # O BIEN PUEDO PASARLO POR EL PAYLOAD
-  # MENSAJE -> ["1","1","ping:123","phx_join",{estoEs: "payload"}]
-  # OJO EL PAYLOAD DEBE SER UN JSON VALIDO
   def join("ping:" <> numbers, payload, socket) do
     IO.puts("SE HA CONECTADO CLIENTE AL TOPICO WILD:")
 
@@ -34,6 +29,11 @@ defmodule HsocketsWeb.PingChannel do
 
   def handle_in("pong", _payload, socket) do
     IO.puts("pong recibido")
+    {:reply, {:ok, %{ping: "pong"}}, socket}
+  end
+
+  def handle_in("ping", _payload, socket) do
+    IO.puts("ping recibido")
     {:reply, {:ok, %{ping: "pong"}}, socket}
   end
 

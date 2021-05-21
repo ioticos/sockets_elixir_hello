@@ -1,4 +1,4 @@
-defmodule Hsockets.UserTracker do
+defmodule HsocketsWeb.UserTracker do
   def track(%{channel_pid: pid, topic: topic, assigns: %{user_id: user_id}}) do
     metadata = %{
       online_at: DateTime.utc_now(),

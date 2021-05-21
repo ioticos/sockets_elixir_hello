@@ -1,17 +1,17 @@
 
 import { Socket } from "phoenix"
 
-let socket = new Socket("/socket", { params: { token: window.userToken } })
+let socket = new Socket("/auth_socket", { params: { token: window.userToken } })
 
 socket.connect()
 
-let channel = socket.channel("ping:123", {})
+let channel = socket.channel("tracked", {})
 
 channel.join()
   .receive("ok", resp => {
     console.log("Joined successfully", resp)
 
-    channel.push("pong")
+    channel.push("ping")
       .receive("ok", (resp) => {
         console.log(resp)
         console.log("won't happen")
