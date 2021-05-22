@@ -1,16 +1,19 @@
+# ═════════════════════════════
+# SOCKET DE ACCESO RESTRINGIDO
+# ═════════════════════════════
+
 defmodule HsocketsWeb.AuthSocket do
 
   use Phoenix.Socket
   require Logger
 
-  channel "tracked", HsocketsWeb.TrackedChannel
-  channel "user:*", HsocketsWeb.TrackedChannel
+  # Apuntamos el tópico "user:*" al canal Autchannel
+  channel "user:*", HsocketsWeb.AuthChannel
 
   def connect(%{"token" => token}, socket) do
     case verify(socket, token) do
       {:ok, user_id} ->
         socket = assign(socket, :user_id, user_id)
-        IO.inspect(socket)
         {:ok, socket}
 
       {:error, err} ->
@@ -24,13 +27,13 @@ defmodule HsocketsWeb.AuthSocket do
     :error
   end
 
-  #esta función es la que le asigna un id al SOCKET para luego poder manipularlo
-  #al socket le estamos poniendo el mismo id del usuario
+  # esta función es la que le asigna un id al SOCKET para luego poder manipularlo
+  # al socket le estamos poniendo el mismo id del usuario
   def id(%{assigns: %{user_id: user_id}}) do
     "auth_socket:#{user_id}"
   end
 
-  defp verify(socket,token) do
+  defp verify(socket, token) do
     Phoenix.Token.verify(
       socket,
       "saltidentifier",

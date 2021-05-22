@@ -1,4 +1,45 @@
 
+
+import { Socket } from "phoenix"
+
+const authSocket = new Socket("/auth_socket", { params: { token: window.authToken } });
+
+authSocket.onOpen(() => console.log('authSocket Conectado!'))
+authSocket.connect()
+
+let channel = authSocket.channel("user:" + window.userId, {})
+
+channel.join()
+  .receive("ok", resp => {
+    console.log("userChannel Conectado!", resp)
+    console.log("")
+    console.log("Enviando ping...")
+
+    channel.push("ping:frase_de_prueba", { payload: 1 })
+      .receive("ok", (resp) => {
+        console.log("\t Respuesta recibida....")
+        console.log(resp)
+
+      })
+      .receive("error", (resp) => console.error("Recibimos error luego de enviar ping", resp))
+      .receive("timeout", (resp) => console.error("Recibimos timeout luego de enviar ping", resp))
+  })
+  .receive("error", resp => { console.log("Imposible unirnos al canal user:", resp) })
+
+
+channel.on("salida", (payload) => {
+
+  console.log("salida recibida con payload -> ", payload)
+
+
+})
+
+export default authSocket
+
+
+
+/*
+
 import { Socket } from "phoenix"
 
 let socket = new Socket("/auth_socket", { params: { token: window.userToken } })
@@ -30,9 +71,10 @@ channel.on("send_ping", (payload) => {
   channel.push("ping:123")
     .receive("ok", (resp) => {
       console.log("ping:", resp.ping)
-    
+
     })
 
 })
 
 export default socket
+*/
